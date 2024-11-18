@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Learning Platform</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            background-image: url('images/background.jpg'); /* Replace with your background image */
+            background-size: cover;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .user-info {
+            margin-bottom: 30px;
+        }
+
+        .user-info h2,
+        .completion h2 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .course-details {
+            margin-bottom: 20px;
+        }
+
+        .course-item {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            background-color: #ddd;
+            border-radius: 20px;
+            margin: 10px 0;
+            height: 30px;
+        }
+
+        .progress-bar-fill {
+            background-color: #4caf50;
+            height: 100%;
+            border-radius: 20px;
+            width: 0%;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .quiz-btn,
+        .certificate-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .quiz-btn:hover,
+        .certificate-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>User Dashboard</h1>
+
+        <div class="user-info">
+            <h2>User Information</h2>
+            <div class="user-details">
+                <p><strong>Name:</strong> <span id="userName">Sample Name</span></p>
+                <p><strong>Email:</strong> <span id="userEmail">sample@example.com</span></p>
+            </div>
+        </div>
+
+        <div class="completion">
+            <h2>Course Progress</h2>
+            <div id="coursesContainer">
+                <!-- Courses and progress bars will be added dynamically here -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Mock user data
+        const user = {
+            name: "Sample Name",
+            email: "sample@example.com",
+            courses: [
+                { courseName: "JavaScript Basics", progress: 80, quizPage: "quiz1.html", certLink: "images/javascript_certificate1.pdf" },
+                { courseName: "HTML & CSS", progress: 50, quizPage: "quiz2.html", certLink: "images/html_css_certificate.pdf" },
+                { courseName: "Python for Beginners", progress: 70, quizPage: "quiz2.html", certLink: "images/python_certificate.pdf" }
+            ]
+        };
+
+        // Populate user information
+        document.getElementById("userName").textContent = user.name;
+        document.getElementById("userEmail").textContent = user.email;
+
+        // Create course progress bars and quiz/certificate buttons
+        const coursesContainer = document.getElementById("coursesContainer");
+
+        user.courses.forEach(course => {
+            // Create a container for each course
+            const courseItem = document.createElement("div");
+            courseItem.className = "course-item";
+
+            // Course name
+            const courseName = document.createElement("p");
+            courseName.innerHTML = `<strong>Course:</strong> ${course.courseName}`;
+            courseItem.appendChild(courseName);
+
+            // Progress bar
+            const progressBar = document.createElement("div");
+            progressBar.className = "progress-bar";
+            const progressBarFill = document.createElement("div");
+            progressBarFill.className = "progress-bar-fill";
+            progressBarFill.style.width = `${course.progress}%`;
+            progressBarFill.textContent = `${course.progress}%`;
+            progressBar.appendChild(progressBarFill);
+            courseItem.appendChild(progressBar);
+
+            // Certificate button only if progress is 60% or more
+            if (course.progress >= 60) {
+                const certificateButton = document.createElement("a");
+                certificateButton.href = course.certLink; // Corrected to use certLink for PDF
+                certificateButton.className = "certificate-btn";
+                certificateButton.textContent = `Download ${course.courseName} Certificate`;
+                courseItem.appendChild(certificateButton);
+            }
+
+            // If course progress is >= 60%, show quiz button
+            if (course.progress >= 60) {
+                const quizButton = document.createElement("a");
+                quizButton.href = course.quizPage;
+                quizButton.className = "quiz-btn";
+                quizButton.textContent = `Take ${course.courseName} Quiz`;
+                courseItem.appendChild(quizButton);
+            } else {
+                const notCompletedMsg = document.createElement("p");
+                notCompletedMsg.textContent = `You need to complete more of the ${course.courseName} course to access the quiz.`;
+                courseItem.appendChild(notCompletedMsg);
+            }
+
+            coursesContainer.appendChild(courseItem);
+        });
+    </script>
+</body>
+
+</html>

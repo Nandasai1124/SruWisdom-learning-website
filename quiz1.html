@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Basics Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin: 15px 0;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .question label {
+            font-weight: bold;
+        }
+
+        .question input {
+            margin: 5px 0;
+        }
+
+        .submit-button,
+        .try-again-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover,
+        .try-again-button:hover {
+            background-color: #218838;
+        }
+
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            display: none; /* Hidden by default */
+        }
+
+        .certificate {
+            display: none; /* Hidden by default */
+            margin-top: 20px;
+        }
+
+        .certificate a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .certificate a:hover {
+            background-color: #0056b3;
+        }
+
+        .attempts {
+            margin-top: 10px;
+            font-size: 1em;
+            color: #dc3545; /* Red color for attempts */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>JavaScript Basics Quiz</h1>
+    <div class="timer" id="timerDisplay">Time Remaining: 03:00</div>
+
+    <!-- Quiz Questions -->
+    <div class="question">
+        <label>1. Which of the following is used to declare a variable in JavaScript?</label><br>
+        <input type="radio" name="question1" value="var"> var<br>
+        <input type="radio" name="question1" value="let"> let<br>
+        <input type="radio" name="question1" value="const"> const<br>
+        <input type="radio" name="question1" value="All of the above"> All of the above<br>
+    </div>
+
+    <div class="question">
+        <label>2. What does `console.log()` do?</label><br>
+        <input type="radio" name="question2" value="Prints to the console"> Prints to the console<br>
+        <input type="radio" name="question2" value="Creates an alert"> Creates an alert<br>
+        <input type="radio" name="question2" value="Logs errors"> Logs errors<br>
+        <input type="radio" name="question2" value="None of the above"> None of the above<br>
+    </div>
+
+    <div class="question">
+        <label>3. What symbol is used for comments in JavaScript?</label><br>
+        <input type="radio" name="question3" value="//"> // (double slash)<br>
+        <input type="radio" name="question3" value="/* */"> /* */ (block comment)<br>
+        <input type="radio" name="question3" value="**"> ** (double asterisk)<br>
+        <input type="radio" name="question3" value="##"> ## (double hash)<br>
+    </div>
+
+    <div class="question">
+        <label>4. Which of the following is a JavaScript data type?</label><br>
+        <input type="radio" name="question4" value="String"> String<br>
+        <input type="radio" name="question4" value="Integer"> Integer<br>
+        <input type="radio" name="question4" value="Character"> Character<br>
+        <input type="radio" name="question4" value="Float"> Float<br>
+    </div>
+
+    <div class="question">
+        <label>5. How do you create a function in JavaScript?</label><br>
+        <input type="radio" name="question5" value="function myFunction() {}"> function myFunction() {}<br>
+        <input type="radio" name="question5" value="create function myFunction() {}"> create function myFunction() {}<br>
+        <input type="radio" name="question5" value="function:myFunction() {}"> function:myFunction() {}<br>
+        <input type="radio" name="question5" value="myFunction() = function {}"> myFunction() = function {}<br>
+    </div>
+
+    <button class="submit-button" onclick="submitQuiz()">Submit Quiz</button>
+    <button class="try-again-button" id="tryAgainButton" style="display:none;" onclick="tryAgain()">Try Again</button>
+
+    <div class="result" id="resultMessage"></div>
+    <div class="attempts" id="attemptsMessage"></div>
+    <div class="certificate" id="certificate">
+        <a id="downloadLink" href="#" download="certificate.txt">Download Certificate</a>
+    </div>
+
+    <script>
+        let timeRemaining = 180; // 3 minutes
+        let attempts = 0; // Number of attempts
+        const maxAttempts = 3; // Maximum attempts allowed
+
+        // Timer function
+        let timer;
+
+        function startTimer() {
+            timeRemaining = 180; // Reset timer to 3 minutes
+            document.getElementById('timerDisplay').textContent = `Time Remaining: 03:00`;
+            timer = setInterval(() => {
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                document.getElementById('timerDisplay').textContent = `Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    alert('Time is up! Submitting your quiz.');
+                    submitQuiz();
+                }
+                timeRemaining--;
+            }, 1000);
+        }
+
+        function submitQuiz() {
+            clearInterval(timer); // Stop the timer
+            attempts++; // Increment attempts count
+
+            // Check answers
+            let score = 0;
+            const answers = {
+                question1: 'All of the above', // Correct answer for question 1
+                question2: 'Prints to the console', // Correct answer for question 2
+                question3: '//', // Correct answer for question 3
+                question4: 'String', // Correct answer for question 4
+                question5: 'function myFunction() {}' // Correct answer for question 5
+            };
+
+            // Check each question
+            const questions = ['question1', 'question2', 'question3', 'question4', 'question5'];
+            questions.forEach((question) => {
+                const answer = document.querySelector(`input[name="${question}"]:checked`);
+                if (answer && answer.value === answers[question]) {
+                    score++;
+                }
+            });
+
+            const resultMessage = document.getElementById('resultMessage');
+            const attemptsMessage = document.getElementById('attemptsMessage');
+            const certificate = document.getElementById('certificate');
+            const downloadLink = document.getElementById('downloadLink');
+
+            if (score < 3) {
+                resultMessage.textContent = 'You have not passed this exam. Please try again.';
+                resultMessage.style.color = '#dc3545'; // Red for failure
+                certificate.style.display = 'none'; // Hide certificate
+                attemptsMessage.textContent = `Attempts remaining: ${maxAttempts - attempts}`;
+                attemptsMessage.style.color = '#dc3545'; // Red for attempts
+                document.getElementById('tryAgainButton').style.display = 'block'; // Show try again button
+            } else {
+                resultMessage.textContent = `Congratulations! You scored ${score} out of ${questions.length}.`;
+                resultMessage.style.color = '#28a745'; // Green for success
+                certificate.style.display = 'block'; // Show certificate
+                downloadLink.href = createCertificate(score); // Create a downloadable certificate
+                attemptsMessage.textContent = ''; // Clear attempts message
+                document.getElementById('tryAgainButton').style.display = 'none'; // Hide try again button
+            }
+
+            resultMessage.style.display = 'block'; // Show result message
+        }
+
+        function createCertificate(score) {
+            const certificateText = `Certificate of Achievement\n\nThis certifies that you have successfully completed the JavaScript Basics Quiz with a score of ${score} out of 5.`;
+            const blob = new Blob([certificateText], { type: 'text/plain' });
+            return URL.createObjectURL(blob); // Create a downloadable link
+        }
+
+        function tryAgain() {
+            if (attempts < maxAttempts) {
+                document.getElementById('resultMessage').style.display = 'none'; // Hide result message
+                document.getElementById('attemptsMessage').textContent = ''; // Clear attempts message
+                document.getElementById('tryAgainButton').style.display = 'none'; // Hide try again button
+                document.getElementById('certificate').style.display = 'none'; // Hide certificate
+                startTimer(); // Restart timer
+                resetQuiz(); // Reset quiz
+            } else {
+                alert('You have finished all your attempts.');
+            }
+        }
+
+        function resetQuiz() {
+            const questions = ['question1', 'question2', 'question3', 'question4', 'question5'];
+            questions.forEach((question) => {
+                const answer = document.querySelector(`input[name="${question}"]`);
+                if (answer) {
+                    answer.checked = false; // Reset all answers
+                }
+            });
+        }
+
+        startTimer(); // Start the timer when the page loads
+    </script>
+</body>
+
+</html>
